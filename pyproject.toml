@@ -1,0 +1,27 @@
+[project]
+name = "bike_safety_env"
+version = "1.0.0"
+description = "Two-wheeler safety simulation for Meta OpenEnv Hackathon"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "openenv-core",
+    "pydantic",
+    "fastapi",
+    "uvicorn"
+]
+
+[project.scripts]
+server = "openenv.server:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.openenv]
+# We merged the settings here so there is only ONE [tool.openenv] header
+server_path = "server/app.py"
+entrypoint = "server.environment:BikeSafetyEnv"
+observation_model = "models:Observation"
+action_model = "models:Action"
+

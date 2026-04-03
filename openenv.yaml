@@ -1,0 +1,6 @@
+name: "bike_safety_env"
+version: "1.0.0"
+description: "A two-wheeler safety simulation for the Meta OpenEnv Hackathon."
+entrypoint: "environment:BikeSafetyEnv"
+observation_model: "models:Observation"
+action_model: "models:Action"
