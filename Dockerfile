@@ -2,14 +2,20 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install necessary system dependencies
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy your files into the container
+# Copy your files
 COPY . .
 
-# Install OpenEnv and dependencies
-RUN pip install --no-cache-dir openenv-core pydantic uvicorn fastapi
+# FORCE INSTALL the openenv library and other core needs
+RUN pip install --no-cache-dir fastapi uvicorn openenv-core pydantic
 
-# The command to launch your environment as a server
-CMD ["python", "-m", "openenv.server", "--env", "environment:BikeSafetyEnv"]
+# Also try to install from your local pyproject.toml if available
+RUN pip install --no-cache-dir . 
+
+# Use port 7860 for Hugging Face
+CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]
