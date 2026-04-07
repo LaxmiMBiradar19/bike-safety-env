@@ -1,28 +1,24 @@
 FROM python:3.10-slim
 
-# Set the working directory
 WORKDIR /app
 
-# Install system tools needed for building packages
+# Install system essentials
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
     git \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy all project files into the container
-COPY . .
-
-# Force install the core requirements and the library
-# This ensures openenv_core is available for your app.py imports
+# 1. Force install everything into a specific location
 RUN pip install --no-cache-dir fastapi uvicorn pydantic openenv-core
 
-# Install the current directory as an editable package
-RUN pip install -e .
+# 2. Copy your files
+COPY . .
 
-# CRITICAL: Tell Python to look inside the /app folder for your server module
-ENV PYTHONPATH="/app:${PYTHONPATH}"
+# 3. ABSOLUTE PATH INJECTION: This is the fix.
+# This tells Python exactly where the 'openenv_core' library was installed 
+# and where your 'server' folder is.
+ENV PYTHONPATH="/app:/app/server:/usr/local/lib/python3.10/site-packages"
 
-# Run uvicorn on the port Hugging Face requires (7860)
-# We point to 'server.app:app' because app.py is inside the 'server' folder
-CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]
+# 4. Use the specific python runner
+CMD ["python3", "-m", "uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]
