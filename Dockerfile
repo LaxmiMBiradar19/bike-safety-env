@@ -2,23 +2,19 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install system essentials
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+    build-essential cmake git && rm -rf /var/lib/apt/lists/*
 
-# 1. Force install everything into a specific location
-RUN pip install --no-cache-dir fastapi uvicorn pydantic openenv-core
+# 1. Install every possible variation of the library
+RUN pip install --no-cache-dir fastapi uvicorn pydantic openenv-core openenv
 
-# 2. Copy your files
+# 2. DEBUG STEP: This will print all installed modules to your logs
+RUN pip list
+
 COPY . .
 
-# 3. ABSOLUTE PATH INJECTION: This is the fix.
-# This tells Python exactly where the 'openenv_core' library was installed 
-# and where your 'server' folder is.
-ENV PYTHONPATH="/app:/app/server:/usr/local/lib/python3.10/site-packages"
+# 3. Set the path to include the root and the server folder
+ENV PYTHONPATH="/app:/app/server"
 
-# 4. Use the specific python runner
-CMD ["python3", "-m", "uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]
+# 4. Use a more robust startup command
+CMD ["python3", "-m", "uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860", "--log-level", "debug"]
