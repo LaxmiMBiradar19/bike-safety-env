@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from openenv.server import OpenEnvServer
+from openenv_core.server import OpenEnvServer
 from .environment import BikeSafetyEnv
 
 # 1. Create the standard FastAPI app
