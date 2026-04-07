@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY . .
 
-RUN pip install --no-cache-dir fastapi uvicorn pydantic
+RUN pip install --no-cache-dir fastapi uvicorn pydantic openenv-core || pip install --no-cache-dir fastapi uvicorn pydantic
 
 ENV PYTHONPATH="/app:/app/server"
 
