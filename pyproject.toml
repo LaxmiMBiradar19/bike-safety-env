@@ -5,10 +5,14 @@ description = "Two-wheeler safety simulation for Meta OpenEnv Hackathon"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "openenv-core>=0.2.0",
     "pydantic",
     "fastapi",
     "uvicorn"
 ]
+
+[project.scripts]
+server = "server.app:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
