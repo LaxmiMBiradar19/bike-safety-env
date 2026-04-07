@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from openenv_core.server import OpenEnvServer
+from openenv.server import OpenEnvServer
 # Removed the dot (.) so it works inside the container
 from environment import BikeSafetyEnv 
 
